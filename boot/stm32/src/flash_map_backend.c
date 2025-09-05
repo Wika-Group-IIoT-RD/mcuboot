@@ -3,18 +3,9 @@
 #include <string.h>
 #include <stdio.h>
 #include "bootutil_log.h"
+#include "app_update.h"
 
 extern UART_HandleTypeDef hlpuart1;
-
-#define SLOT0_BASE     0x08010000
-#define SLOT1_BASE     0x08020000
-#define SCRATCH_BASE   0x08030000
-
-
-#define SLOT_SIZE      0x10000  // 128 Ko
-#define SCRATCH_SIZE   0x10000  // 64 Ko
-#define SECTOR_SIZE    0x4000   // 32 Ko
-#define SECTOR_COUNT   (SLOT_SIZE / SECTOR_SIZE)
 
 static struct flash_area slot0 = {
     .fa_id = 0,
