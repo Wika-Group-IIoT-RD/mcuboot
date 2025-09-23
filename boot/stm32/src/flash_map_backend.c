@@ -21,18 +21,18 @@ static struct flash_area slot1 = {
     .fa_size = SLOT_SIZE,
 };
 
-static struct flash_area slot2 = {
-    .fa_id = 2,
-    .fa_device_id = 0,
-    .fa_off = SCRATCH_BASE,
-    .fa_size = SCRATCH_SIZE,
-};
+//static struct flash_area slot2 = {
+//    .fa_id = 2,
+//    .fa_device_id = 0,
+//    .fa_off = SCRATCH_BASE,
+//    .fa_size = SCRATCH_SIZE,
+//};
 
 int flash_area_open(uint8_t id, const struct flash_area **fa) {
     switch (id) {
         case 0: *fa = &slot0; return 0;
         case 1: *fa = &slot1; return 0;
-        case 2: *fa = &slot2; return 0;
+//        case 2: *fa = &slot2; return 0;
         default:
             char msg[64];
             snprintf(msg, sizeof(msg), "Unknown slot id (%d)\r\n", id);
