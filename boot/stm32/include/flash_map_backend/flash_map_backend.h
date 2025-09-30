@@ -26,7 +26,7 @@ void flash_area_close(const struct flash_area *fa);
 int flash_area_read(const struct flash_area *fa, uint32_t off, void *dst, uint32_t len);
 int flash_area_write(const struct flash_area *fa, uint32_t off, const void *src, uint32_t len);
 int flash_area_erase(const struct flash_area *fa, uint32_t off, uint32_t len);
-
+int flash_area_id_to_multi_image_slot(int image_index, int area_id);
 
 
 
