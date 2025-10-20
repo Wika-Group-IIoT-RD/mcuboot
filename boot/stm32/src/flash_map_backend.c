@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "flash_map_backend.h"
 #include "stm32wlxx_hal.h"
 #include <string.h>
