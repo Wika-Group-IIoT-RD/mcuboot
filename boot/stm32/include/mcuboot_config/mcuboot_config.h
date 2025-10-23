@@ -13,16 +13,27 @@
 //#define MCUBOOT_MODE_SWAP_USING_SCRATCH 1
 
 #define MCUBOOT_MAX_IMG_SECTORS 128
+
+// simple configuration : tinycrypt with only signature
+#if defined(TINYCRYPT)
 #define MCUBOOT_USE_TINYCRYPT
-//#define MCUBOOT_USE_MBED_TLS
+#define MCUBOOT_VALIDATE_SLOT0 1
+#define MCUBOOT_ENCRYPT_EC256
+#elif defined(MBEDTLS)
+#define MCUBOOT_USE_MBED_TLS
+// todo : use AES ????
+#define MCUBOOT_ENCRYPT_EC256
+//#define MCUBOOT_AES_256
+#else
+#error ""ERROR : CHOOSE between tinycrypt or mbedtls""
+#endif //TINYCRYPT
+
+
 #define MCUBOOT_SIGNATURE_TYPE_ECDSA_P256
 #define MCUBOOT_ENC_IMAGES
 #define MCUBOOT_SIGN_EC256
-#define MCUBOOT_ENCRYPT_EC256
-//#define MCUBOOT_AES_256
+
 #define MCUBOOT_VALIDATE_PRIMARY_SLOT
-//#define MCUBOOT_SIGNATURE_KEY_NONE
-#define MCUBOOT_VALIDATE_SLOT0 1
 #define MCUBOOT_USE_FLASH_AREA_GET_SECTORS 1
 
 
