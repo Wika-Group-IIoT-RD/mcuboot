@@ -42,8 +42,11 @@
         /* TODO: to be implemented */   \
     } while (0)
 
-
+#ifdef DEBUG
 #define MCUBOOT_HAVE_LOGGING 1
+#else
+#undef MCUBOOT_HAVE_LOGGING
+#endif //DEBUG
 
 
 
