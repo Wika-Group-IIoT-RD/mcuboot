@@ -21,6 +21,7 @@
 #define MCUBOOT_ENCRYPT_EC256
 #elif defined(MBEDTLS)
 #define MCUBOOT_USE_MBED_TLS
+#define MCUBOOT_VALIDATE_SLOT0 1
 // todo : use AES ????
 #define MCUBOOT_ENCRYPT_EC256
 //#define MCUBOOT_AES_256
@@ -42,11 +43,11 @@
         /* TODO: to be implemented */   \
     } while (0)
 
-#ifdef DEBUG
+//#ifdef DEBUG
 #define MCUBOOT_HAVE_LOGGING 1
-#else
-#undef MCUBOOT_HAVE_LOGGING
-#endif //DEBUG
+//#else
+//#undef MCUBOOT_HAVE_LOGGING
+//#endif //DEBUG
 
 
 
