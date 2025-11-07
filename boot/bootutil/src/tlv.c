@@ -143,6 +143,13 @@ bootutil_tlv_iter_next(struct image_tlv_iter *it, uint32_t *off, uint16_t *len,
             it->tlv_off += sizeof(tlv) + tlv.it_len;
             BOOT_LOG_DBG("bootutil_tlv_iter_next: TLV %d found at %d (size %d)",
                          tlv.it_type, *off, *len);
+
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+            BOOT_LOG_INF("bootutil_tlv_iter_next: TLV %d found at %d (size %d)",
+                    tlv.it_type, *off, *len);
+#endif //DEBUG
+#endif //DEBUG_OBS
             return 0;
         }
 

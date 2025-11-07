@@ -69,7 +69,9 @@
     } while (0)
 
 //#ifdef DEBUG
-#define MCUBOOT_HAVE_LOGGING 1
+#define MCUBOOT_HAVE_LOGGING 	1
+
+#define DEBUG_OBS				1
 //#else
 //#undef MCUBOOT_HAVE_LOGGING
 //#endif //DEBUG
