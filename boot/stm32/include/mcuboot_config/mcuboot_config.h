@@ -18,7 +18,6 @@
 #if defined(TINYCRYPT)
 #define MCUBOOT_USE_TINYCRYPT
 #define MCUBOOT_VALIDATE_SLOT0 1
-#define MCUBOOT_ENCRYPT_EC256
 
 
 #elif defined(MBEDTLS)
