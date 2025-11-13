@@ -18,21 +18,33 @@
 #if defined(TINYCRYPT)
 #define MCUBOOT_USE_TINYCRYPT
 #define MCUBOOT_VALIDATE_SLOT0 1
-#define MCUBOOT_ENCRYPT_EC256
+
 #elif defined(MBEDTLS)
 #define MCUBOOT_USE_MBED_TLS
 #define MCUBOOT_VALIDATE_SLOT0 1
 // todo : use AES ????
-#define MCUBOOT_ENCRYPT_EC256
-//#define MCUBOOT_AES_256
+#if defined(AES_256)
+#define MCUBOOT_AES_256
+#elif defined(AES_128)
+#define MCUBOOT_AES_128
+#endif //AES_256
+
 #else
 #error ""ERROR : CHOOSE between tinycrypt or mbedtls""
 #endif //TINYCRYPT
 
-
+// signature is always ECDSA_P256
 #define MCUBOOT_SIGNATURE_TYPE_ECDSA_P256
-#define MCUBOOT_ENC_IMAGES
 #define MCUBOOT_SIGN_EC256
+
+#if defined(ACTIVATE_ENCRYPTION)
+#define MCUBOOT_ENC_IMAGES
+#else
+#undef MCUBOOT_ENC_IMAGES
+#endif //ACTIVATE_ENCRYPTION
+
+#define MCUBOOT_ENCRYPT_EC256
+
 
 #define MCUBOOT_VALIDATE_PRIMARY_SLOT
 #define MCUBOOT_USE_FLASH_AREA_GET_SECTORS 1
