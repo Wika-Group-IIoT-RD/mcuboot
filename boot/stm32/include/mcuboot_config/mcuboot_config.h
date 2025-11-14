@@ -1,6 +1,8 @@
 #ifndef MCUBOOT_CONFIG_H
 #define MCUBOOT_CONFIG_H
 
+#include <stdio.h>
+
 #define MCUBOOT_IMAGE_NUMBER 1
 #define IMAGE_EXECUTABLE_RAM_START 0x20000000
 #define IMAGE_EXECUTABLE_RAM_SIZE 0x100000
@@ -45,9 +47,20 @@
 #undef MCUBOOT_ENC_IMAGES
 #endif //ACTIVATE_ENCRYPTION
 
+#if defined(GENERATE_KEY)
+#define MCUBOOT_GEN_ENC_KEY
+#define MCUBOOT_HAVE_HWRNG
+#if defined(BAREMETAL)
+#define snprintk snprintf
+#endif //BAREMETAL
+#else
+#undef MCUBOOT_GEN_ENC_KEY
+#undef MCUBOOT_HAVE_HWRNG
+#endif //#if  defined(GENERATE_KEY)
 
 #define MCUBOOT_VALIDATE_PRIMARY_SLOT
 #define MCUBOOT_USE_FLASH_AREA_GET_SECTORS 1
+
 
 
 #define MCUBOOT_WATCHDOG_FEED()         \
