@@ -399,7 +399,7 @@ bootutil_img_validate(struct boot_loader_state *state,
             BOOT_LOG_DBG("bootutil_img_validate: EXPECTED_SIG_TLV == %d", EXPECTED_SIG_TLV);
 #ifdef DEBUG_OBS
 #ifndef DEBUG
-            BOOT_LOG_INF("bootutil_img_validate: EXPECTED_SIG_TLV == %d", EXPECTED_SIG_TLV);
+            BOOT_LOG_INF("bootutil_img_validate: EXPECTED_SIG_TLV == %d\n", EXPECTED_SIG_TLV);
 #endif //DEBUG
 #endif //DEBUG_OBS
 
@@ -422,11 +422,6 @@ bootutil_img_validate(struct boot_loader_state *state,
 #else
             rc = flash_device_base(flash_area_get_device_id(fap), &base);
             if (rc != 0) {
-#ifdef DEBUG_OBS
-#ifndef DEBUG
-            	BOOT_LOG_INF("flash_device_base rc = %d, failed", rc);
-#endif //DEBUG
-#endif //DEBUG_OBS
                 goto out;
             }
 
@@ -561,11 +556,6 @@ bootutil_img_validate(struct boot_loader_state *state,
 #if defined(EXPECTED_HASH_TLV) && !defined(MCUBOOT_SIGN_PURE)
     rc = !image_hash_valid;
     if (rc) {
-#ifdef DEBUG_OBS
-#ifndef DEBUG
-    	BOOT_LOG_INF("image_hash_valid = %d. image_has is not valid", image_hash_valid);
-#endif //DEBUG
-#endif //DEBUG_OBS
         goto out;
     }
 #elif defined(MCUBOOT_SIGN_PURE)

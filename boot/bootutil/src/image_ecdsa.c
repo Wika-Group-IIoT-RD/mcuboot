@@ -50,11 +50,9 @@ bootutil_verify_sig(uint8_t *hash, uint32_t hlen, uint8_t *sig, size_t slen,
     uint8_t *end;
 
     BOOT_LOG_DBG("bootutil_verify_sig: ECDSA builtin key %d", key_id);
-
-
 #ifdef DEBUG_OBS
 #ifndef DEBUG
-    	BOOT_LOG_INF("bootutil_verify_sig: ECDSA builtin key %d", key_id);
+    BOOT_LOG_INF("bootutil_verify_sig: ECDSA builtin key %d", key_id);
 #endif //DEBUG
 #endif //DEBUG_OBS
 
@@ -64,21 +62,10 @@ bootutil_verify_sig(uint8_t *hash, uint32_t hlen, uint8_t *sig, size_t slen,
 
     rc = bootutil_ecdsa_parse_public_key(&ctx, &pubkey, end);
     if (rc) {
-#ifdef DEBUG_OBS
-#ifndef DEBUG
-    	BOOT_LOG_INF("bootutil_ecdsa_parse_public_key rc = %d, failed", rc);
-#endif //DEBUG
-#endif //DEBUG_OBS
         goto out;
     }
 
     rc = bootutil_ecdsa_verify(&ctx, pubkey, end-pubkey, hash, hlen, sig, slen);
-
-#ifdef DEBUG_OBS
-#ifndef DEBUG
-    if (rc)	BOOT_LOG_INF("bootutil_ecdsa_verify failed, rc = %d pubkey = %ld, end_pubkey = %d, hash = %ld, sig = %ld, slen = %d", rc, pubkey, end-pubkey, hash, sig);
-#endif //DEBUG
-#endif //DEBUG_OBS
 
     fih_rc = fih_ret_encode_zero_equality(rc);
     if (FIH_NOT_EQ(fih_rc, FIH_SUCCESS)) {

@@ -550,7 +550,7 @@ boot_validate_slot(struct boot_loader_state *state, int slot,
 
 #ifdef DEBUG_OBS
 #ifndef DEBUG
-	BOOT_LOG_INF("boot_validate_slot: slot %d, expected_swap_type %d",
+	BOOT_LOG_INF("boot_validate_slot: slot %d, expected_swap_type %d\n",
                         slot, expected_swap_type);
 #endif //DEBUG
 #endif //DEBUG_OBS
@@ -701,9 +701,9 @@ check_validity:
                      internal_img_addr, min_addr, max_addr);
 
 #ifdef DEBUG_OBS
-#ifdef DEBUG
-        BOOT_LOG_INF("Image %d expected load address 0x%x", BOOT_CURR_IMG(state), internal_img_addr);
-        BOOT_LOG_INF("Check 0x%x is within [min_addr, max_addr] = [0x%x, 0x%x)",
+#ifndef DEBUG
+        BOOT_LOG_INF("Image %d expected load address 0x%x\n", BOOT_CURR_IMG(state), internal_img_addr);
+        BOOT_LOG_INF("Check 0x%x is within [min_addr, max_addr] = [0x%x, 0x%x)\n",
                              internal_img_addr, min_addr, max_addr);
 #endif //DEBUG
 #endif //DEBUG_OBS
