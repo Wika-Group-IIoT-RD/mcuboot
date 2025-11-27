@@ -576,22 +576,42 @@ static inline int bootutil_ecdsa_verify(bootutil_ecdsa_context *ctx,
 
     rc = mbedtls_ecp_group_load(&ctx->MBEDTLS_CONTEXT_MEMBER(grp), MBEDTLS_ECP_DP_SECP256R1);
     if (rc) {
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    	BOOT_LOG_INF("mbedtls_ecp_group_load failed, rc = %d ", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
         return -1;
     }
 
     rc = mbedtls_ecp_point_read_binary(&ctx->MBEDTLS_CONTEXT_MEMBER(grp), &ctx->MBEDTLS_CONTEXT_MEMBER(Q), pk, pk_len);
     if (rc) {
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    	BOOT_LOG_INF("mbedtls_ecp_point_read_binary failed, rc = %d ", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
         return -1;
     }
 
     rc = mbedtls_ecp_check_pubkey(&ctx->MBEDTLS_CONTEXT_MEMBER(grp), &ctx->MBEDTLS_CONTEXT_MEMBER(Q));
     if (rc) {
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    	BOOT_LOG_INF("mbedtls_ecp_check_pubkey failed, rc = %d ", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
         return -1;
     }
 
     rc = mbedtls_ecdsa_read_signature(ctx, hash, BOOTUTIL_CRYPTO_ECDSA_P256_HASH_SIZE,
                                       sig, sig_len);
     if (rc) {
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    	BOOT_LOG_INF("mbedtls_ecdsa_read_signature failed, rc = %d ", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
         return -1;
     }
 

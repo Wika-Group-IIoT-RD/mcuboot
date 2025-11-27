@@ -147,6 +147,13 @@ bootutil_tlv_iter_next(struct image_tlv_iter *it, uint32_t *off, uint16_t *len,
             BOOT_LOG_DBG("bootutil_tlv_iter_next: TLV %d found at %" PRIu32
                          " (size %d)",
                          tlv.it_type, *off, *len);
+
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+            BOOT_LOG_INF("bootutil_tlv_iter_next: TLV %d found at %d (size %d)\n",
+                    tlv.it_type, *off, *len);
+#endif //DEBUG
+#endif //DEBUG_OBS
             return 0;
         }
 

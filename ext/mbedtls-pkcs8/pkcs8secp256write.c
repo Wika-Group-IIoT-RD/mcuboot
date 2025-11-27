@@ -1,5 +1,7 @@
 #include "common.h"
 
+#if defined(GENERATE_KEY)
+
 #if defined(MBEDTLS_PK_WRITE_C)
 
 #include "mbedtls/pk.h"
@@ -253,4 +255,4 @@ int mbedtls_pk_write_keypkcs8_der(const mbedtls_pk_context *key, unsigned char *
     return MBEDTLS_ERR_PK_FEATURE_UNAVAILABLE;
 }
 
-
+#endif //#if defined(GENERATE_KEY)
