@@ -1,6 +1,7 @@
 #include "common.h"
 
-#if defined(BOOT_GEN_ENC_KEY)
+// todo : how to use same define than zephyr?
+//#if defined(BOOT_GEN_ENC_KEY)
 
 #if defined(MBEDTLS_PK_WRITE_C)
 
@@ -255,4 +256,5 @@ int mbedtls_pk_write_keypkcs8_der(const mbedtls_pk_context *key, unsigned char *
     return MBEDTLS_ERR_PK_FEATURE_UNAVAILABLE;
 }
 
-#endif //#if defined(BOOT_GEN_ENC_KEY)
+// todo : how to use same define than zephyr project???
+//#endif //#if defined(BOOT_GEN_ENC_KEY)
