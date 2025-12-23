@@ -1,0 +1,1 @@
+int mbedtls_pk_write_keypkcs8_der(const mbedtls_pk_context *key, unsigned char *buf, size_t size);

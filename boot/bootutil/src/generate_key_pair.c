@@ -15,6 +15,7 @@
 #include "bootutil/generate_key_pair.h"
 #include "bootutil/bootutil_log.h"
 #include "bootutil/bootutil_hwrng.h"
+#include "pkcs8secp256write.h"
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
 

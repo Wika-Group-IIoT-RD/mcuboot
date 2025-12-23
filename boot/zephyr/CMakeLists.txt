@@ -200,6 +200,9 @@ if(CONFIG_BOOT_GEN_ENC_KEY)
     ${BOOT_DIR}/bootutil/src/generate_key_pair.c
     ${MCUBOOT_DIR}/ext/mbedtls-pkcs8/pkcs8secp256write.c
     )
+  zephyr_library_include_directories(
+      ${MCUBOOT_DIR}/ext/mbedtls-pkcs8/
+    )
 endif()
 if(CONFIG_BOOT_SIGNATURE_TYPE_ECDSA_P256 OR CONFIG_BOOT_ENCRYPT_EC256)
   # When ECDSA PSA is used, do not pull in additional ASN.1 include
