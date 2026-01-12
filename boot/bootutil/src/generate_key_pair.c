@@ -16,6 +16,7 @@
 #include "bootutil/bootutil_log.h"
 #include "bootutil/bootutil_hwrng.h"
 #include "pkcs8secp256write.h"
+#include "key.h"
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
 
@@ -152,6 +153,12 @@ export_privkey_der(mbedtls_pk_context *pk)
     der_len = (size_t)len;
 
     BOOT_LOG_INF("Private key DER length = %u\n", (unsigned int)der_len);
+
+    // if bad length what are we doing ????
+    if (der_len == LENGTH_PRIVATE_KEY)
+    {
+    	memcpy(enc_priv_key, der_ptr, LENGTH_PRIVATE_KEY);
+    }
 
     for (size_t i = 0; i < der_len; i++) {
         unsigned int val = (unsigned int)der_ptr[i];
