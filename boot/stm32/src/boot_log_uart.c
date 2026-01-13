@@ -9,7 +9,7 @@ extern UART_HandleTypeDef hlpuart1;
 #define TIMEOUT_500_MS		500
 
 static void boot_log_uart_send(const char *prefix, const char *msg, va_list args) {
-    char buffer[128];
+    char buffer[MAX_UART_BUFFER];
     int len = snprintf(buffer, sizeof(buffer), "\r\n[%s] ", prefix);
     vsnprintf(buffer + len, sizeof(buffer) - len, msg, args);
 

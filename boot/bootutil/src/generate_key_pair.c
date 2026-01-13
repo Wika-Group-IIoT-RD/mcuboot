@@ -17,8 +17,69 @@
 #include "bootutil/bootutil_hwrng.h"
 #include "pkcs8secp256write.h"
 #include "key.h"
+#include "bootutil_log.h"
+#include "stm32wlxx_hal.h"
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
+
+#define LENGTH_DOUBLE_WORD	(8)
+#define MIN_SECTOR_SIZE     (0x800)
+#define BASE                (0x08000000)
+
+// to permit to debug
+static uint64_t data_to_write = 0;
+
+
+static int flash_write_private_key (int len, unsigned char * private_buf_der)
+{
+	if (!private_buf_der)
+	{
+		BOOT_LOG_ERR("private_buf_der NULL");
+		return -1;
+	}
+
+	// erase
+	HAL_FLASH_Unlock();
+
+	uint32_t adress_private_key = (uint32_t) enc_priv_key;
+
+	FLASH_EraseInitTypeDef erase = {
+	        .TypeErase = FLASH_TYPEERASE_PAGES,
+	        .Page = ((adress_private_key - BASE) / MIN_SECTOR_SIZE),
+	        .NbPages = 1,
+	    };
+
+    uint32_t page_error;
+
+    if (HAL_FLASHEx_Erase(&erase, &page_error) != HAL_OK)
+    {
+        HAL_FLASH_Lock();
+        BOOT_LOG_ERR("Key generation failed !!!.\nErase issue");
+        return -1;
+    }
+    HAL_FLASH_Lock();
+
+    // flash
+    HAL_FLASH_Unlock();
+
+	// be careful LENGTH_PRIVATE_KEY = 138/8 = 7. need to change if LENGTH_PRIVATE_KEY is no more multiple of 8
+	for (uint16_t i = 0; i < len; i = i + LENGTH_DOUBLE_WORD)
+	{
+		memcpy(&data_to_write, &private_buf_der[i], sizeof(uint64_t));
+
+		if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, adress_private_key + i, data_to_write) != HAL_OK)
+		{
+			BOOT_LOG_ERR("Key generation failed !!!.\nFlash issue");
+			HAL_FLASH_Lock();
+			return len;
+		}
+	}
+
+	HAL_FLASH_Lock();
+
+	return 0;
+}
+
 
 /**
  * @brief Generate random data using the hardware random number generator.
@@ -137,10 +198,8 @@ cleanup:
 int
 export_privkey_der(mbedtls_pk_context *pk)
 {
+    unsigned char line[MAX_UART_BUFFER];
     unsigned char buf[800];
-    unsigned char *der_ptr;
-    size_t der_len;
-    char line[160];
     int pos = 0;
 
     int len = mbedtls_pk_write_keypkcs8_der(pk, buf, sizeof(buf));
@@ -149,33 +208,41 @@ export_privkey_der(mbedtls_pk_context *pk)
         return len;
     }
 
-    der_ptr = buf + sizeof(buf) - len;
-    der_len = (size_t)len;
+    unsigned char *der_ptr = buf + sizeof(buf) - len;
 
-    BOOT_LOG_INF("Private key DER length = %u\n", (unsigned int)der_len);
+    BOOT_LOG_INF("Private key DER length = %u\n", (unsigned int)len);
 
     // if bad length what are we doing ????
-    if (der_len == LENGTH_PRIVATE_KEY)
+    if (len == LENGTH_PRIVATE_KEY)
     {
-    	memcpy(enc_priv_key, der_ptr, LENGTH_PRIVATE_KEY);
+    	int rc  = flash_write_private_key(len, der_ptr);
+
+    	if (rc != 0)
+    	{
+			BOOT_LOG_ERR("fails write pkcs8 der");
+			return len;
+    	}
+
+        for (size_t i = 0; i < len; i++)
+        {
+            unsigned int val = (unsigned int)enc_priv_key[i];
+    		pos += snprintk((void*) &line[pos], sizeof(line) - pos, "0x%02X", val);
+
+            if (i < (len - 1)) {
+                pos += snprintk((void*) &line[pos], sizeof(line) - pos, ",");
+            }
+
+            if ((pos > (sizeof(line) - 8)) || (i == (len - 1))) {
+                BOOT_LOG_INF("%s", line);
+                pos = 0;
+            }
+        }
     }
-
-    for (size_t i = 0; i < der_len; i++) {
-        unsigned int val = (unsigned int)der_ptr[i];
-        if (val < 0x10) {
-            pos += snprintk(&line[pos], sizeof(line) - pos, "0x0%X", val);
-        } else {
-            pos += snprintk(&line[pos], sizeof(line) - pos, "0x%X", val);
-        }
-
-        if (i < der_len - 1) {
-            pos += snprintk(&line[pos], sizeof(line) - pos, ",");
-        }
-
-        if (pos > sizeof(line) - 8 || i == der_len - 1) {
-            BOOT_LOG_INF("%s", line);
-            pos = 0;
-        }
+    else
+    {
+    	BOOT_LOG_ERR("private key length is bad !!!!\nprivate key Length = %d", len);
+    	BOOT_LOG_ERR("Key generation failed !!!");
+    	return len;
     }
 
     return 0;
@@ -262,9 +329,18 @@ generate_enc_key_pair()
     int rc = -1;
     BOOT_LOG_INF("Generate enc key pair starting...");
     rc = gen_p256_keypair(&pk);
-    rc = export_privkey_der(&pk);
-    rc = export_pub_pem(&pk);
-    dump_p256(&pk);
+
+    if (rc == 0) {
+    	rc = export_privkey_der(&pk);
+    }
+
+    if (rc == 0) {
+    	rc = export_pub_pem(&pk);
+    }
+
+    if (rc == 0) {
+    	dump_p256(&pk);
+    }
 
     if (rc != 0) {
         BOOT_LOG_ERR("Error during the generation enc key pair\n");

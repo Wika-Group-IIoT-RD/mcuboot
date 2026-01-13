@@ -45,6 +45,8 @@ extern "C" {
 #define BOOT_LOG_MODULE_DECLARE(module)  MCUBOOT_LOG_MODULE_DECLARE(module)
 #define BOOT_LOG_MODULE_REGISTER(module) MCUBOOT_LOG_MODULE_REGISTER(module)
 
+#define MAX_UART_BUFFER  (800)
+
 #else
 
 #define BOOT_LOG_ERR(...) IGNORE(__VA_ARGS__)
