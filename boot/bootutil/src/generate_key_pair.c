@@ -286,32 +286,44 @@ export_pub_pem(mbedtls_pk_context *pk)
  * @param pk Initialize mbedtls_pk_context and contains the generate key pair.
  *
  */
-void
-dump_p256(const mbedtls_pk_context *pk)
-{
-    const mbedtls_ecp_keypair *eckey = mbedtls_pk_ec(*pk);
-    unsigned char buf[32];
-    memset(buf, 0, sizeof buf);
-    mbedtls_mpi_write_binary(&eckey->private_d, buf, 32);
-    BOOT_LOG_INF("Private key d = ");
-    for (int i = 0; i < 32; i++) {
-        BOOT_LOG_INF("%02X", buf[i]);
-    }
-    BOOT_LOG_INF("\n");
+int dump_p256(const mbedtls_pk_context *pk) {
+  const mbedtls_ecp_keypair *eckey = mbedtls_pk_ec(*pk);
+  unsigned char buf[32];
+  memset(buf, 0, sizeof buf);
+  mbedtls_mpi_write_binary(&eckey->private_d, buf, 32);
+  BOOT_LOG_INF("Private key d = ");
+  for (int i = 0; i < 32; i++) {
+    BOOT_LOG_INF("%02X", buf[i]);
+  }
+  BOOT_LOG_INF("\n");
 
-    mbedtls_mpi_write_binary(&eckey->private_Q.private_X, buf, 32);
-    BOOT_LOG_INF("Public key Q.X = ");
-    for (int i = 0; i < 32; i++) {
-        BOOT_LOG_INF("%02X", buf[i]);
-    }
-    BOOT_LOG_INF("\n");
+  int rc = mbedtls_mpi_write_binary(&eckey->private_Q.private_X, buf, 32);
 
-    mbedtls_mpi_write_binary(&eckey->private_Q.private_Y, buf, 32);
-    BOOT_LOG_INF("Public key Q.Y = ");
-    for (int i = 0; i < 32; i++) {
-        BOOT_LOG_INF("%02X", buf[i]);
-    }
-    BOOT_LOG_INF("\n");
+  if (rc != 0) {
+    BOOT_LOG_ERR("Error during dump of private key X.\n");
+    return -1;
+  }
+
+  BOOT_LOG_INF("Public key Q.X = ");
+  for (int i = 0; i < 32; i++) {
+    BOOT_LOG_INF("%02X", buf[i]);
+  }
+  BOOT_LOG_INF("\n");
+
+  rc = mbedtls_mpi_write_binary(&eckey->private_Q.private_Y, buf, 32);
+
+  if (rc != 0) {
+    BOOT_LOG_ERR("Error during dump of private key Y.\n");
+    return -1;
+  }
+
+  BOOT_LOG_INF("Public key Q.Y = ");
+  for (int i = 0; i < 32; i++) {
+    BOOT_LOG_INF("%02X", buf[i]);
+  }
+  BOOT_LOG_INF("\n");
+
+  return 0;
 }
 
 /**
@@ -322,7 +334,7 @@ dump_p256(const mbedtls_pk_context *pk)
  * @note On failure, print error message.
  * @note On success, print success message.
  */
-void
+int
 generate_enc_key_pair()
 {
     mbedtls_pk_context pk;
@@ -330,23 +342,36 @@ generate_enc_key_pair()
     BOOT_LOG_INF("Generate enc key pair starting...");
     rc = gen_p256_keypair(&pk);
 
-    if (rc == 0) {
-    	rc = export_privkey_der(&pk);
-    }
 
-    if (rc == 0) {
-    	rc = export_pub_pem(&pk);
-    }
+   if (rc != 0) {
+     BOOT_LOG_ERR("Error during the generation enc key pair\n");
+     return -1;
+   }
 
-    if (rc == 0) {
-    	dump_p256(&pk);
-    }
+   rc = export_privkey_der(&pk);
 
-    if (rc != 0) {
-        BOOT_LOG_ERR("Error during the generation enc key pair\n");
-    } else {
-        BOOT_LOG_INF("Success key is generated");
-    }
+   if (rc != 0) {
+     BOOT_LOG_ERR("Error during the generation export private key \n");
+     return -1;
+   }
+
+  rc = export_pub_pem(&pk);
+
+   if (rc != 0) {
+    BOOT_LOG_ERR("Error during the generation export public key.\n");
+    return -1;
+   }
+
+   rc = dump_p256(&pk);
+
+   if (rc != 0) {
+     BOOT_LOG_ERR("Error during dump_p256. generation key\n");
+     return -1;
+   } else {
+     BOOT_LOG_INF("Success key is generated");
+   }
+
+   return 0;
 }
 
 #endif /* MCUBOOT_GEN_ENC_KEY */
