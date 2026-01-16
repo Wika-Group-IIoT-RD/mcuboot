@@ -16,7 +16,9 @@
 #include "bootutil/bootutil_log.h"
 #include "bootutil/bootutil_hwrng.h"
 #include "pkcs8secp256write.h"
+#ifdef BAREMETAL
 #include "key.h"
+#endif //BAREMETAL
 #include "bootutil_log.h"
 #include "stm32wlxx_hal.h"
 
@@ -215,7 +217,10 @@ export_privkey_der(mbedtls_pk_context *pk)
     // if bad length what are we doing ????
     if (len == LENGTH_PRIVATE_KEY)
     {
+    	// todo : to change
+#ifdef BAREMETAL
     	int rc  = flash_write_private_key(len, der_ptr);
+#endif //BAREMETAL
 
     	if (rc != 0)
     	{
@@ -225,7 +230,11 @@ export_privkey_der(mbedtls_pk_context *pk)
 
         for (size_t i = 0; i < len; i++)
         {
+#ifdef BAREMETAL
             unsigned int val = (unsigned int)enc_priv_key[i];
+#elif
+            unsigned int val = (unsigned int)der_ptr[i];
+#endif //BAREMETAL
     		pos += snprintk((void*) &line[pos], sizeof(line) - pos, "0x%02X", val);
 
             if (i < (len - 1)) {
