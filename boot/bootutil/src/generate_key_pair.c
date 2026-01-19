@@ -19,7 +19,7 @@
 #ifdef BAREMETAL
 #include "key.h"
 #endif //BAREMETAL
-#include "bootutil_log.h"
+#include "bootutil/bootutil_log.h"
 #include "stm32wlxx_hal.h"
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
