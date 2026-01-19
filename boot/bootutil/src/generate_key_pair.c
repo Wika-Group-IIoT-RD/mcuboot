@@ -16,11 +16,11 @@
 #include "bootutil/bootutil_log.h"
 #include "bootutil/bootutil_hwrng.h"
 #include "pkcs8secp256write.h"
+#include "bootutil/bootutil_log.h"
 #ifdef BAREMETAL
 #include "key.h"
-#endif //BAREMETAL
-#include "bootutil/bootutil_log.h"
 #include "stm32wlxx_hal.h"
+#endif //BAREMETAL
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
 
@@ -31,7 +31,7 @@ BOOT_LOG_MODULE_DECLARE(mcuboot);
 // to permit to debug
 static uint64_t data_to_write = 0;
 
-
+#ifdef BAREMETAL
 static int flash_write_private_key (int len, unsigned char * private_buf_der)
 {
 	if (!private_buf_der)
@@ -81,6 +81,7 @@ static int flash_write_private_key (int len, unsigned char * private_buf_der)
 
 	return 0;
 }
+#endif //#ifdef BAREMETAL
 
 
 /**
@@ -214,25 +215,27 @@ export_privkey_der(mbedtls_pk_context *pk)
 
     BOOT_LOG_INF("Private key DER length = %u\n", (unsigned int)len);
 
+#ifdef BAREMETAL
     // if bad length what are we doing ????
     if (len == LENGTH_PRIVATE_KEY)
     {
     	// todo : to change
-#ifdef BAREMETAL
+
     	int rc  = flash_write_private_key(len, der_ptr);
-#endif //BAREMETAL
+
 
     	if (rc != 0)
     	{
 			BOOT_LOG_ERR("fails write pkcs8 der");
 			return len;
     	}
+#endif //BAREMETAL
 
         for (size_t i = 0; i < len; i++)
         {
 #ifdef BAREMETAL
             unsigned int val = (unsigned int)enc_priv_key[i];
-#elif
+#else
             unsigned int val = (unsigned int)der_ptr[i];
 #endif //BAREMETAL
     		pos += snprintk((void*) &line[pos], sizeof(line) - pos, "0x%02X", val);
@@ -246,6 +249,7 @@ export_privkey_der(mbedtls_pk_context *pk)
                 pos = 0;
             }
         }
+#ifdef BAREMETAL
     }
     else
     {
@@ -253,6 +257,7 @@ export_privkey_der(mbedtls_pk_context *pk)
     	BOOT_LOG_ERR("Key generation failed !!!");
     	return len;
     }
+#endif //BAREMETAL
 
     return 0;
 }
