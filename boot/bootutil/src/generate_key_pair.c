@@ -28,8 +28,10 @@ BOOT_LOG_MODULE_DECLARE(mcuboot);
 #define MIN_SECTOR_SIZE     (0x800)
 #define BASE                (0x08000000)
 
+#ifdef BAREMETAL
 // to permit to debug
 static uint64_t data_to_write = 0;
+#endif //BAREMETAL
 
 #ifdef BAREMETAL
 static int flash_write_private_key (int len, unsigned char * private_buf_der)
