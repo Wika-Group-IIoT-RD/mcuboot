@@ -72,7 +72,7 @@
 #define MCUBOOT_HAVE_LOGGING 	1
 
 // to add some debug log.
-#if 0
+#if 1
 #define DEBUG_OBS				1
 #endif //0
 //#else
