@@ -18,7 +18,9 @@
  * limitations under the License.
  */
 #include "bootutil/bootutil_hwrng.h"
+#if defined(CONFIG_MCUBOOT_GEN_ENC_KEY)
 #include "bootutil/generate_key_pair.h"
+#endif // CONFIG_MCUBOOT_GEN_ENC_KEY
 #include <assert.h>
 #include <zephyr/kernel.h>
 #include <zephyr/devicetree.h>
