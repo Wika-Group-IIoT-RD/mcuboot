@@ -507,7 +507,7 @@ int
 main(void)
 {
     struct boot_rsp rsp;
-    int rc;
+    int rc = 0;
 #if defined(CONFIG_BOOT_USB_DFU_GPIO) || defined(CONFIG_BOOT_USB_DFU_WAIT)
     bool usb_dfu_requested = false;
 #endif
@@ -646,6 +646,7 @@ main(void)
     if (FIH_NOT_EQ(fih_rc, FIH_SUCCESS)) {
         BOOT_LOG_ERR("Unable to find bootable image");
 #if defined(MCUBOOT_GEN_ENC_KEY) && defined(MCUBOOT_HAVE_HWRNG)
+    rc = 0;
     rc = generate_enc_key_pair();
 #endif
 
