@@ -58,6 +58,8 @@
 #include <bootloader_init.h>
 #include <esp_image_loader.h>
 
+#include "mcuboot_config/mcuboot_config.h"
+
 #if defined(MCUBOOT_GEN_ENC_KEY)
 #include "bootutil/generate_key_pair.h"
 #endif // MCUBOOT_GEN_ENC_KEY
