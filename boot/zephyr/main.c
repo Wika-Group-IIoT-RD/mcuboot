@@ -18,9 +18,6 @@
  * limitations under the License.
  */
 #include "bootutil/bootutil_hwrng.h"
-#if defined(MCUBOOT_GEN_ENC_KEY)
-#include "bootutil/generate_key_pair.h"
-#endif // MCUBOOT_GEN_ENC_KEY
 #include <assert.h>
 #include <zephyr/kernel.h>
 #include <zephyr/devicetree.h>
@@ -60,6 +57,10 @@
 
 #include <bootloader_init.h>
 #include <esp_image_loader.h>
+
+#if defined(MCUBOOT_GEN_ENC_KEY)
+#include "bootutil/generate_key_pair.h"
+#endif // MCUBOOT_GEN_ENC_KEY
 
 #define IMAGE_INDEX_0 0
 #define IMAGE_INDEX_1 1
