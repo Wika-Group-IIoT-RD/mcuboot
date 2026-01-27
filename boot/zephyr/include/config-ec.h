@@ -85,6 +85,7 @@
 
 /* If encryption is being used, also enable the features needed for
  * that. */
+#include "mcuboot_config/mcuboot_config.h"
 #if defined(MCUBOOT_ENC_IMAGES)
 #define MBEDTLS_CIPHER_MODE_CTR
 #define MBEDTLS_CIPHER_C
