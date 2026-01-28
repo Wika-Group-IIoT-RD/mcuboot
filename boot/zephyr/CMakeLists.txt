@@ -320,7 +320,7 @@ elseif(CONFIG_BOOT_SIGNATURE_TYPE_ED25519 OR CONFIG_BOOT_ENCRYPT_X25519)
 endif()
 
 if(NOT CONFIG_BOOT_ED25519_PSA AND NOT CONFIG_BOOT_ECDSA_PSA)
-  if(CONFIG_BOOT_ENCRYPT_EC256 OR CONFIG_BOOT_ENCRYPT_X25519)
+  if(CONFIG_BOOT_ENCRYPT_EC256 OR CONFIG_BOOT_ENCRYPT_X25519 AND NOT CONFIG_MBEDTLS )
     zephyr_library_sources(
       ${TINYCRYPT_DIR}/source/aes_encrypt.c
       ${TINYCRYPT_DIR}/source/aes_decrypt.c
@@ -330,8 +330,8 @@ if(NOT CONFIG_BOOT_ED25519_PSA AND NOT CONFIG_BOOT_ECDSA_PSA)
     )
   endif()
 endif()
-
-if(CONFIG_BOOT_ENCRYPT_EC256 AND NOT CONFIG_BOOT_ECDSA_PSA)
+ 
+if(CONFIG_BOOT_ENCRYPT_EC256 AND NOT CONFIG_BOOT_ECDSA_PSA AND NOT CONFIG_MBEDTLS)
   zephyr_library_sources(
     ${TINYCRYPT_DIR}/source/ecc_dh.c
     )
@@ -451,19 +451,23 @@ if(CONFIG_BOOT_ENCRYPTION_KEY_FILE AND NOT CONFIG_BOOT_ENCRYPTION_KEY_FILE STREQ
     message(WARNING "WARNING: Using default MCUboot encryption key file, this file is for debug use only and is not secure!")
   endif()
 
-  set(GENERATED_ENCKEY ${ZEPHYR_BINARY_DIR}/autogen-enckey.c)
-  add_custom_command(
-    OUTPUT ${GENERATED_ENCKEY}
-    COMMAND
-    ${PYTHON_EXECUTABLE}
-    ${MCUBOOT_DIR}/scripts/imgtool.py
-    getpriv
-    -k
-    ${KEY_FILE}
-    > ${GENERATED_ENCKEY}
-    DEPENDS ${KEY_FILE}
-    )
-  zephyr_library_sources(${GENERATED_ENCKEY})
+  # do we need to generate the encryption key source file?
+  if (NOT CONFIG_BOOT_GEN_ENC_KEY)
+    set(GENERATED_ENCKEY ${ZEPHYR_BINARY_DIR}/autogen-enckey.c)
+    add_custom_command(
+      OUTPUT ${GENERATED_ENCKEY}
+      COMMAND
+      ${PYTHON_EXECUTABLE}
+      ${MCUBOOT_DIR}/scripts/imgtool.py
+      getpriv
+      -k
+      ${KEY_FILE}
+      > ${GENERATED_ENCKEY}
+      DEPENDS ${KEY_FILE}
+      )
+    zephyr_library_sources(${GENERATED_ENCKEY})
+  endif()
+
 endif()
 
 if(CONFIG_MCUBOOT_CLEANUP_ARM_CORE)
