@@ -15,7 +15,7 @@
 #include "bootutil/generate_key_pair.h"
 #include "bootutil/bootutil_log.h"
 #include "bootutil/bootutil_hwrng.h"
-#include "bootutil/bootutil_hw_save_key.h"
+#include "bootutil/bootutil_hw_store_enc_key.h"
 #include "pkcs8secp256write.h"
 #include "bootutil/bootutil_log.h"
 #ifdef BAREMETAL
@@ -160,12 +160,14 @@ export_privkey_der(mbedtls_pk_context *pk)
     // if bad length what are we doing ????
     if (len == LENGTH_PRIVATE_KEY)
     {
-    	// todo : to change
+    	// save keys
+    	int rc  = BOOT_STORE_ENC_KEY(len, der_ptr);
 
-    	int rc  = BOOT_SAVE_KEY(len, der_ptr);
-
-
-    	if (rc != 0)
+    	if (rc == 0)
+    	{
+    		BOOT_LOG_INF("!!! Success to save private key !!!\n\n");
+    	}
+    	else
     	{
 			BOOT_LOG_ERR("fails write pkcs8 der");
 			return len;

@@ -16,7 +16,7 @@ static uint64_t data_to_write = 0;
 #endif //BAREMETAL
 
 
-int save_hw_key(int len, unsigned char * private_buf_der)
+int store_enc_key(int len, unsigned char * private_buf_der)
 {
 
 #ifdef BAREMETAL
