@@ -200,6 +200,7 @@ if(CONFIG_BOOT_GEN_ENC_KEY)
     ${BOOT_DIR}/bootutil/src/generate_key_pair.c
     ${MCUBOOT_DIR}/ext/mbedtls-pkcs8/pkcs8secp256write.c
     ${BOOT_DIR}/zephyr/keys.c
+    ${BOOT_DIR}/zephyr/boot_store_enc_key.c
     )
   zephyr_library_include_directories(
       ${MCUBOOT_DIR}/ext/mbedtls-pkcs8/
