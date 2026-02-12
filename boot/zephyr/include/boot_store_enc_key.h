@@ -8,6 +8,6 @@
 
 #include <zephyr/kernel.h>
 
-int store_enc_key(const unsigned char *key, size_t key_len)
+int store_enc_key(const unsigned char *key, size_t key_len);
 
 #endif /*_BOOT_STORE_ENC_KEY_H_*/
