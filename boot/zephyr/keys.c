@@ -105,7 +105,7 @@ const struct bootutil_key bootutil_enc_key = {
 #define FLASH_STORAGE DT_REG_ADDR(DT_NODELABEL(storage_partition))
 #define enc_priv_key  ( const unsigned char *) FLASH_STORAGE
 
-static unsigned int enc_priv_key_len=LENGTH_PRIVATE_KEY;
+static unsigned int enc_priv_key_len = LENGTH_PRIVATE_KEY;
 
 const struct bootutil_key bootutil_enc_key = {
     .key = enc_priv_key,

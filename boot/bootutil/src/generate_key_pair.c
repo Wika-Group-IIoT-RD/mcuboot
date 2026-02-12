@@ -21,6 +21,8 @@
 #ifdef BAREMETAL
 #include "key.h"
 #include "stm32wlxx_hal.h"
+#else
+#include "keys.h"
 #endif //BAREMETAL
 
 BOOT_LOG_MODULE_DECLARE(mcuboot);
@@ -156,7 +158,6 @@ export_privkey_der(mbedtls_pk_context *pk)
 
     BOOT_LOG_INF("Private key DER length = %u\n", (unsigned int)len);
 
-#ifdef BAREMETAL
     // if bad length what are we doing ????
     if (len == LENGTH_PRIVATE_KEY)
     {
@@ -172,15 +173,11 @@ export_privkey_der(mbedtls_pk_context *pk)
 			BOOT_LOG_ERR("fails write pkcs8 der. rc = %d", rc);
 			return len;
     	}
-#endif //BAREMETAL
 
         for (size_t i = 0; i < len; i++)
         {
-#ifdef BAREMETAL
-            unsigned int val = (unsigned int)enc_priv_key[i];
-#else
             unsigned int val = (unsigned int)der_ptr[i];
-#endif //BAREMETAL
+
     		pos += snprintk((void*) &line[pos], sizeof(line) - pos, "0x%02X", val);
 
             if (i < (len - 1)) {
@@ -192,7 +189,6 @@ export_privkey_der(mbedtls_pk_context *pk)
                 pos = 0;
             }
         }
-#ifdef BAREMETAL
     }
     else
     {
@@ -200,7 +196,6 @@ export_privkey_der(mbedtls_pk_context *pk)
     	BOOT_LOG_ERR("Key generation failed !!!");
     	return len;
     }
-#endif //BAREMETAL
 
     return 0;
 }

@@ -9,12 +9,12 @@ extern "C" {
 
 #include <mcuboot_config/mcuboot_config.h>
 
-#if defined(GENERATE_KEY)
+#if defined(MCUBOOT_GEN_ENC_KEY)
 #include <mcuboot_config/mcuboot_store_enc_key.h>
 #define BOOT_STORE_ENC_KEY(...) MCUBOOT_STORE_ENC_KEY(__VA_ARGS__)
 #else
 #define BOOT_STORE_ENC_KEY(...) IGNORE(__VA_ARGS__)
-#endif /* GENERATE_KEY */
+#endif /* MCUBOOT_GEN_ENC_KEY */
 
 #ifdef __cplusplus
 }
