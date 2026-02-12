@@ -169,7 +169,7 @@ export_privkey_der(mbedtls_pk_context *pk)
     	}
     	else
     	{
-			BOOT_LOG_ERR("fails write pkcs8 der");
+			BOOT_LOG_ERR("fails write pkcs8 der. rc = %d", rc);
 			return len;
     	}
 #endif //BAREMETAL

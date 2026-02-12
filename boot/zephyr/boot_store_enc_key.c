@@ -10,9 +10,13 @@
 // key size 138 and double word 8
 #define FIXED_KEY_LEN 138
 int
-store_enc_key(const unsigned char *key, size_t key_len)
+store_enc_key(int key_len, unsigned char *key)
 {
-
+    if ((key_len != FIXED_KEY_LEN) || (key == NULL))
+    {
+        return -1;
+    }
+    
     const struct flash_area *fa;
     int rc = flash_area_open(FIXED_PARTITION_ID(storage_partition), &fa);
     if (rc)
