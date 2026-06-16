@@ -40,7 +40,7 @@
 #include <inttypes.h>
 #include <stddef.h>
 
-#include "sysflash/sysflash.h"
+#include "mcuboot/boot/stm32/include/sysflash/sysflash.h"
 #include "flash_map_backend/flash_map_backend.h"
 
 #include "bootutil/image.h"
