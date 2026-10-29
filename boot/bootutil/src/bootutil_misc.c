@@ -357,6 +357,7 @@ uint32_t bootutil_max_image_size(struct boot_loader_state *state, const struct f
     return boot_status_off(fap);
 #elif defined(MCUBOOT_SWAP_USING_MOVE) || defined(MCUBOOT_SWAP_USING_OFFSET) \
       || defined(MCUBOOT_SWAP_USING_SCRATCH)
+//    BOOT_LOG_INF("input bootutil_max_image_size. ");
     (void) fap;
     return app_max_size(state);
 #elif defined(MCUBOOT_OVERWRITE_ONLY)

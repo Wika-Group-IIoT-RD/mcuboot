@@ -258,8 +258,20 @@ bootutil_img_validate(struct boot_loader_state *state,
 
     BOOT_LOG_DBG("bootutil_img_validate: flash area %p", fap);
 
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    BOOT_LOG_INF("bootutil_img_validate: flash area %p", fap);
+#endif //DEBUG
+#endif //DEBUG_OBS
+
 #if defined(EXPECTED_HASH_TLV) && !defined(MCUBOOT_SIGN_PURE)
     rc = bootutil_img_hash(state, hdr, fap, tmp_buf, tmp_buf_sz, hash, seed, seed_len);
+
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    BOOT_LOG_INF("bootutil_img_hash. rc = %d", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
     if (rc) {
         goto out;
     }
@@ -287,6 +299,13 @@ bootutil_img_validate(struct boot_loader_state *state,
 #endif
 
     rc = bootutil_tlv_iter_begin(&it, hdr, fap, IMAGE_TLV_ANY, false);
+
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    BOOT_LOG_INF("bootutil_tlv_iter_begin. rc = %d", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
+
     if (rc) {
         BOOT_LOG_DBG("bootutil_img_validate: TLV iteration failed %d", rc);
         goto out;
@@ -297,11 +316,25 @@ bootutil_img_validate(struct boot_loader_state *state,
 #else
     img_sz = it.tlv_end;
 #endif
-    BOOT_LOG_DBG("bootutil_img_validate: TLV off %" PRIu32 ", end %" PRIu32,
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    BOOT_LOG_INF("bootutil_img_validate: TLV off %" PRIu32 ", end %" PRIu32,
+            it.tlv_off, it.tlv_end);
+
+    BOOT_LOG_INF("img_sz = %d ; bootutil_max_image_size = %d", img_sz, bootutil_max_image_size(state, fap));
+
+#endif //DEBUG
+#endif //DEBUG_OBS
+    BOOT_LOG_DBG("bootutil_max_image_size = %d, : TLV off %" PRIu32 ", end %" PRIu32,
                  it.tlv_off, it.tlv_end);
 
     if (img_sz > bootutil_max_image_size(state, fap)) {
         rc = -1;
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+                BOOT_LOG_INF("bootutil_img_validate: TLV beyond image size");
+#endif //DEBUG
+#endif //DEBUG_OBS
         BOOT_LOG_DBG("bootutil_img_validate: TLV beyond image size");
         goto out;
     }
@@ -398,6 +431,11 @@ bootutil_img_validate(struct boot_loader_state *state,
 #ifdef EXPECTED_SIG_TLV
         case EXPECTED_SIG_TLV:
         {
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+            BOOT_LOG_INF("bootutil_img_validate: EXPECTED_SIG_TLV == %d", EXPECTED_SIG_TLV);
+#endif //DEBUG
+#endif //DEBUG_OBS
             BOOT_LOG_DBG("bootutil_img_validate: EXPECTED_SIG_TLV == %d", EXPECTED_SIG_TLV);
             /* Ignore this signature if it is out of bounds. */
             if (key_id < 0 || key_id >= bootutil_key_cnt) {
@@ -410,6 +448,11 @@ bootutil_img_validate(struct boot_loader_state *state,
             }
             rc = LOAD_IMAGE_DATA(hdr, fap, off, buf, len);
             if (rc) {
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+                BOOT_LOG_INF("LOAD_IMAGE_DATA rc = %d", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
                 goto out;
             }
 #ifndef MCUBOOT_SIGN_PURE
@@ -551,7 +594,15 @@ bootutil_img_validate(struct boot_loader_state *state,
 
 #if defined(EXPECTED_HASH_TLV) && !defined(MCUBOOT_SIGN_PURE)
     rc = !image_hash_valid;
+
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+                BOOT_LOG_INF("image_hash_valid? rc = %d", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
+
     if (rc) {
+
         goto out;
     }
 #elif defined(MCUBOOT_SIGN_PURE)
@@ -582,6 +633,11 @@ bootutil_img_validate(struct boot_loader_state *state,
 #endif
 
 out:
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    BOOT_LOG_INF("out rc = %d", rc);
+#endif //DEBUG
+#endif //DEBUG_OBS
     if (rc) {
         FIH_SET(fih_rc, FIH_FAILURE);
     }

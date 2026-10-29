@@ -77,6 +77,16 @@ boot_check_header_valid(struct boot_loader_state *state, int slot)
     assert(fap != NULL);
 
     hdr = boot_img_hdr(state, slot);
+
+#ifdef DEBUG_OBS
+#ifndef DEBUG
+    BOOT_LOG_INF("header magic = %X", hdr->ih_magic);
+    BOOT_LOG_INF("header size = %d", hdr->ih_hdr_size);
+    BOOT_LOG_INF("image size = %d", hdr->ih_img_size);
+
+#endif //DEBUG
+#endif //DEBUG_OBS
+
     if (hdr->ih_magic != IMAGE_MAGIC) {
         return false;
     }

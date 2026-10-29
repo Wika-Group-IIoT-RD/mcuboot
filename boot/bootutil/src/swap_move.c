@@ -577,6 +577,12 @@ int app_max_size(struct boot_loader_state *state)
     available_pri_sz = boot_img_num_sectors(state, BOOT_SLOT_PRIMARY) * sector_sz - trailer_sz - padding_sz;
     available_sec_sz = boot_img_num_sectors(state, BOOT_SLOT_SECONDARY) * sector_sz - trailer_sz;
 
+//    BOOT_LOG_INF("sector_sz=%d", sector_sz);
+//    BOOT_LOG_INF("trailer_sz=%d", trailer_sz);
+//    BOOT_LOG_INF("padding_sz=%d", padding_sz);
+//    BOOT_LOG_INF("available_pri_sz=%d", available_pri_sz);
+//    BOOT_LOG_INF("available_sec_sz=%d", available_sec_sz);
+
     return (available_pri_sz < available_sec_sz ? available_pri_sz : available_sec_sz);
 }
 
