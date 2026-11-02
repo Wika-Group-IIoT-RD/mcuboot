@@ -12,7 +12,7 @@ static struct flash_area slot0 = {
     .fa_id = 0,
     .fa_device_id = 0,
     .fa_off = SLOT0_BASE,
-    .fa_size = SLOT_SIZE,
+    .fa_size = SLOT_SIZE + SECTOR_SIZE,
 };
 
 static struct flash_area slot1 = {
