@@ -564,21 +564,19 @@ int app_max_size(struct boot_loader_state *state)
     uint32_t available_pri_sz;
     uint32_t available_sec_sz;
 
-    // OBA02112026 : trailer_sz is integrated inside boot_img_num_sectors(state, BOOT_SLOT_PRIMARY) * sector_sz
-    // trailer_sz is useless now
-//    size_t trailer_sz = boot_trailer_sz(BOOT_WRITE_SZ(state));
+    size_t trailer_sz = boot_trailer_sz(BOOT_WRITE_SZ(state));
     size_t sector_sz = boot_img_sector_size(state, BOOT_SLOT_PRIMARY, 0);
     size_t padding_sz = sector_sz;
 
-//    BOOT_LOG_INF("First trailer_sz=%d", trailer_sz);
-//
-//    /* The trailer size needs to be sector-aligned */
-//    trailer_sz = ALIGN_UP(trailer_sz, sector_sz);
+    BOOT_LOG_INF("First trailer_sz=%d", trailer_sz);
+
+    /* The trailer size needs to be sector-aligned */
+    trailer_sz = ALIGN_UP(trailer_sz, sector_sz);
 
     /* The slot whose size is used to compute the maximum image size must be the one containing the
      * padding required for the swap.
      */
-//    BOOT_LOG_INF("sector_sz=%d", sector_sz);
+    BOOT_LOG_INF("sector_sz=%d", sector_sz);
 
     available_pri_sz = boot_img_num_sectors(state, BOOT_SLOT_PRIMARY) * sector_sz;
     available_sec_sz = boot_img_num_sectors(state, BOOT_SLOT_SECONDARY) * sector_sz - padding_sz;
