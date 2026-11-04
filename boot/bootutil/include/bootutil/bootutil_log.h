@@ -30,8 +30,13 @@ extern "C" {
 #ifdef MCUBOOT_HAVE_LOGGING
 #include <mcuboot_config/mcuboot_logging.h>
 
+#ifdef RELEASE
+#define BOOT_LOG_ERR(...) IGNORE(__VA_ARGS__)
+#define BOOT_LOG_INF(...) IGNORE(__VA_ARGS__)
+#else
 #define BOOT_LOG_ERR(...) MCUBOOT_LOG_ERR(__VA_ARGS__)
 #define BOOT_LOG_INF(...) MCUBOOT_LOG_INF(__VA_ARGS__)
+#endif //RELEASE
 #ifdef DEBUG
 #define BOOT_LOG_WRN(...) MCUBOOT_LOG_WRN(__VA_ARGS__)
 #define BOOT_LOG_DBG(...) MCUBOOT_LOG_DBG(__VA_ARGS__)
